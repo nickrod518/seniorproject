@@ -1,16 +1,17 @@
-var canvas, gl, squareVerticesBuffer, mvMatrix, shaderProgram, vertexPositionAttribute, perspectiveMatrix;
+var canvas, gl, squareVerticesBuffer, mvMatrix, shaderProgram, vertexPositionAttribute, perspectiveMatrix, squareVerticesColorBuffer;
 
 function start() {
   var canvas = document.getElementById("glcanvas");
   
-  initWebGL(canvas); // initialize GL context
+  // initialize GL context
+  initWebGL(canvas);
   
   // only continue if WebGL available and working
   if (gl) {
     gl.clearColor(0.0, 0.0, 0.0, 1.0); // set clear color to fully opaque black
-    gl.enable(gl.DEPTH_TEST); // enable depth testing    
-    gl.depthFunc(gl.LEQUAL); // near things obscure far things    
-    gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT); // clear the color and depth buffer.
+    gl.clearDepth(1.0); // clear everything
+    gl.enable(gl.DEPTH_TEST); // enable depth testing
+    gl.depthFunc(gl.LEQUAL); // near things obscure far things
 
     initShaders();
     initBuffers();
@@ -35,8 +36,8 @@ function initWebGL(canvas) {
 }
 
 function initBuffers() {
-  squareVerticiesBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticiesBuffer);
+  squareVerticesBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
 
   var vertices = [
     1.0, 1.0, 0.0,
@@ -46,6 +47,17 @@ function initBuffers() {
   ];
 
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+  var colors = [
+    1.0, 1.0, 1.0, 1.0, // white
+    1.0, 0.0, 0.0, 1.0, // red
+    0.0, 1.0, 0.0, 1.0, // green
+    0.0, 0.0, 1.0, 1.0 // blue
+  ];
+
+  squareVerticesColorBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesColorBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
 }
 
 function drawScene() {
@@ -58,11 +70,18 @@ function drawScene() {
   // display objects between 0.1 and 100 units from camera
   perspectiveMatrix = makePerspective(45, 640.0/480.0, 0.1, 100.0);
 
+  // set drawing position to center of scene
   loadIdentity();
+
+  // move drawing position to where we want to start
   mvTranslate([-0.0, 0.0, -6.0]);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticiesBuffer);
+  gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
   gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesColorBuffer);
+  gl.vertexAttribPointer(vertexColorAttribute, 4, gl.FLOAT, false, 0, 0);
+
   setMatrixUniforms();
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
@@ -86,6 +105,9 @@ function initShaders() {
 
   vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
   gl.enableVertexAttribArray(vertexPositionAttribute);
+
+  vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
+  gl.enableVertexAttribArray(vertexColorAttribute);
 }
 
 function getShader(gl, id) {
