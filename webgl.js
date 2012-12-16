@@ -1,11 +1,11 @@
 var canvas, gl;
 
-var squareVerticesBuffer, squareVerticesColorBuffer;
-var squareRotation = 0.0;
-var squareXOffset = 0.0;
-var squareYOffset = 0.0;
-var squareZOffset = 0.0;
-var lastSquareUpdateTime = 0;
+var cubeVerticesBuffer, cubeVerticesColorBuffer, cubeVerticesIndexBuffer;
+var cubeRotation = 0.0;
+var cubeXOffset = 0.0;
+var cubeYOffset = 0.0;
+var cubeZOffset = 0.0;
+var lastcubeUpdateTime = 0;
 var xIncValue = 0.2;
 var yIncValue = -0.4;
 var zIncValue = 0.3;
@@ -48,28 +48,87 @@ function initWebGL(canvas) {
 }
 
 function initBuffers() {
-  squareVerticesBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
+  // buffer for cube's vertices
+  cubeVerticesBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, cubeVerticesBuffer);
 
   var vertices = [
-    1.0, 1.0, 0.0,
-    -1.0, 1.0, 0.0,
-    1.0, -1.0, 0.0,
-    -1.0, -1.0, 0.0
+    // Front face
+    -1.0, -1.0,  1.0,
+     1.0, -1.0,  1.0,
+     1.0,  1.0,  1.0,
+    -1.0,  1.0,  1.0,
+     
+    // Back face
+    -1.0, -1.0, -1.0,
+    -1.0,  1.0, -1.0,
+     1.0,  1.0, -1.0,
+     1.0, -1.0, -1.0,
+     
+    // Top face
+    -1.0,  1.0, -1.0,
+    -1.0,  1.0,  1.0,
+     1.0,  1.0,  1.0,
+     1.0,  1.0, -1.0,
+     
+    // Bottom face
+    -1.0, -1.0, -1.0,
+     1.0, -1.0, -1.0,
+     1.0, -1.0,  1.0,
+    -1.0, -1.0,  1.0,
+     
+    // Right face
+     1.0, -1.0, -1.0,
+     1.0,  1.0, -1.0,
+     1.0,  1.0,  1.0,
+     1.0, -1.0,  1.0,
+     
+    // Left face
+    -1.0, -1.0, -1.0,
+    -1.0, -1.0,  1.0,
+    -1.0,  1.0,  1.0,
+    -1.0,  1.0, -1.0
   ];
 
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
   var colors = [
-    1.0, 1.0, 1.0, 1.0, // white
-    1.0, 0.0, 0.0, 1.0, // red
-    0.0, 1.0, 0.0, 1.0, // green
-    0.0, 0.0, 1.0, 1.0 // blue
+    [1.0,  1.0,  1.0,  1.0], // Front face: white
+    [1.0,  0.0,  0.0,  1.0], // Back face: red
+    [0.0,  1.0,  0.0,  1.0], // Top face: green
+    [0.0,  0.0,  1.0,  1.0], // Bottom face: blue
+    [1.0,  1.0,  0.0,  1.0], // Right face: yellow
+    [1.0,  0.0,  1.0,  1.0]  // Left face: purple
   ];
 
-  squareVerticesColorBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesColorBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+  var generatedColors = [];
+
+  for (j = 0; j < 6; j++) {
+    var c = colors[j];
+
+    // repeat each color 4 times for the 4 vertices of the face
+    for (var i = 0; i < 4; i++) {
+      generatedColors = generatedColors.concat(c);
+    }
+  }
+
+  cubeVerticesColorBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, cubeVerticesColorBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(generatedColors), gl.STATIC_DRAW);
+
+  cubeVerticesIndexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVerticesIndexBuffer);
+
+  var cubeVertexIndices = [
+    0, 1, 2, 0, 2, 3, // front
+    4, 5, 6, 4, 6, 7, // back
+    8, 9, 10, 8, 10, 11, // top
+    12, 13, 14, 12, 14, 15, // bottom
+    16, 17, 18, 16, 18, 19, // right
+    20, 21, 22, 20, 22, 23 // left
+  ]
+
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices), gl.STATIC_DRAW);
 }
 
 function drawScene() {
@@ -90,38 +149,40 @@ function drawScene() {
 
   // save current matrix before rotating and drawing
   mvPushMatrix();
-  mvRotate(squareRotation, [1, 0, 1]);
-  mvTranslate([squareXOffset, squareYOffset, squareZOffset]);
+  mvRotate(cubeRotation, [1, 0, 1]);
+  mvTranslate([cubeXOffset, cubeYOffset, cubeZOffset]);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
+  gl.bindBuffer(gl.ARRAY_BUFFER, cubeVerticesBuffer);
   gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
   // set colors for vertices
-  gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesColorBuffer);
+  gl.bindBuffer(gl.ARRAY_BUFFER, cubeVerticesColorBuffer);
   gl.vertexAttribPointer(vertexColorAttribute, 4, gl.FLOAT, false, 0, 0);
 
-  // draw the square
+  // draw the cube
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVerticesIndexBuffer);
   setMatrixUniforms();
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
 
   mvPopMatrix();
 
   var currentTime = (new Date).getTime();
-  if (lastSquareUpdateTime) {
-    var delta = currentTime - lastSquareUpdateTime;
-    squareRotation += (30 * delta) / 1000.0;
-    squareXOffset += xIncValue * ((30 * delta) / 1000.0);
-    squareYOffset += yIncValue * ((30 * delta) / 1000.0);
-    squareZOffset += zIncValue * ((30 * delta) / 1000.0);
+  if (lastcubeUpdateTime) {
+    var delta = currentTime - lastcubeUpdateTime;
 
-    if (Math.abs(squareYOffset) > 2.5) {
+    cubeRotation += (30 * delta) / 1000.0;
+    cubeXOffset += xIncValue * ((30 * delta) / 1000.0);
+    cubeYOffset += yIncValue * ((30 * delta) / 1000.0);
+    cubeZOffset += zIncValue * ((30 * delta) / 1000.0);
+
+    if (Math.abs(cubeYOffset) > 2.5) {
       xIncValue = -xIncValue;
       yIncValue = -yIncValue;
       zIncValue = -zIncValue;
     }
   }
 
-  lastSquareUpdateTime = currentTime;
+  lastcubeUpdateTime = currentTime;
 }
 
 function initShaders() {
@@ -149,24 +210,23 @@ function initShaders() {
 }
 
 function getShader(gl, id) {
-  var shaderScript, theSource, currentChild, shader;
-
-  shaderScript = document.getElementById(id);
+  var shaderScript = document.getElementById(id);
 
   if (!shaderScript) {
     return null;
   }
 
-  theSource = "";
-  currentChild = shaderScript.firstChild;
+  var theSource = "";
+  var currentChild = shaderScript.firstChild;
 
   while (currentChild) {
     if (currentChild.nodeType == 3) {
       theSource += currentChild.textContent;
     }
-
     currentChild = currentChild.nextSibling;
   }
+
+  var shader;
 
   if (shaderScript.type == "x-shader/x-fragment") {
     shader = gl.createShader(gl.FRAGMENT_SHADER);
