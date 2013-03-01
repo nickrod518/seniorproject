@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - loaders - OBJ MTL loader</title>
+		<title>Senior Project</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
@@ -21,11 +21,11 @@
 				z-index: 100;
 				display:block;
 			}
-			#info a, .button { color: #f00; font-weight: bold; text-decoration: underline; cursor: pointer }
 		</style>
 	</head>
 
 	<body>
+		<!-- bar at top with model selection -->
 		<div id="info">
 		    <select id="model">
 		      <option value="RandomFemale">RandomFemale</option>
@@ -41,12 +41,11 @@
 		<script src="js/stats.min.js"></script>
 
 		<script>
-      
 			var container, stats;
 
 			var camera, scene, renderer;
 
-			var mouseX = 0, mouseY = 0;
+			var mouseX = 0, mouseY = 0, scrollZ = 0;
 
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
@@ -66,50 +65,59 @@
 			}
       
 			function init() {
-				container = document.createElement( 'div' );
+				// create a new div container for the element
+				container = document.createElement('div');
+				// give the new div an id of "canvas"
 				container.setAttribute("id", "canvas")
         
-				document.body.appendChild( container );
+				document.body.appendChild(container);
 
         		// PerspectiveCamera(fov, aspect, near, far)
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2500);
 				// distance of camera from model
 				camera.position.z = 500;
 
 				/* scene */
 				scene = new THREE.Scene();
 
-				var ambient = new THREE.AmbientLight( 0x101030 );
-				scene.add( ambient );
+				var ambient = new THREE.AmbientLight(0x101030);
+				scene.add(ambient);
 
 				var directionalLight = new THREE.DirectionalLight( 0xffeedd );
-				directionalLight.position.set( 0, 0, 1 ).normalize();
-				scene.add( directionalLight );
+				directionalLight.position.set(0, 0, 1).normalize();
+				scene.add(directionalLight);
 
 				/* model */
 				// get model name from html element
 				var model = document.getElementById("model").value;
 				var loader = new THREE.OBJMTLLoader();
-				loader.addEventListener( 'load', function ( event ) {
-
+				loader.addEventListener('load', function (event) {
 					var object = event.content;
-
-					// height of camera
 					object.position.y = 0;
-					scene.add( object );
+					scene.add(object);
 				});
 				// use html element's value as the filename and location of the model's files
-				loader.load( model+'/'+model+'.obj', model+'/'+model+'.mtl' );
+				loader.load(model + '/' + model + '.obj', model + '/' + model + '.mtl');
 
 				renderer = new THREE.WebGLRenderer();
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				container.appendChild( renderer.domElement );
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				container.appendChild(renderer.domElement);
 
-				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-
-				window.addEventListener( 'resize', onWindowResize, false );
+				/* mouse event listeners */
+				document.addEventListener('mousemove', onDocumentMouseMove, false);
+				window.addEventListener('resize', onWindowResize, false);
+				// IE9, Chrome, Safari, Opera
+				container.addEventListener('mousewheel', MouseWheelHandler, false);
+				// Firefox
+				container.addEventListener('DOMMouseScroll', MouseWheelHandler, false);
 			}
       
+			function onDocumentMouseMove(event) {
+				// controls sensitivity of mouse movements
+				mouseX = (event.clientX - windowHalfX) * 2;
+				mouseY = (event.clientY - windowHalfY) * 2;
+			}		
+
 			function onWindowResize() {
 				windowHalfX = window.innerWidth / 2;
 				windowHalfY = window.innerHeight / 2;
@@ -117,30 +125,31 @@
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
 
-				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setSize(window.innerWidth, window.innerHeight);
 			}
 
-			function onDocumentMouseMove( event ) {
-				// controls sensitivity of mouse movements
-				mouseX = ( event.clientX - windowHalfX ) * 2;
-				mouseY = ( event.clientY - windowHalfY ) * 2;
+			function MouseWheelHandler(event) {
+				var event = window.event || event; // old IE support
+				scrollZ = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
+				return false;
 			}
 
 			function animate() {
-				requestAnimationFrame( animate );
+				requestAnimationFrame(animate);
 				render();
 			}
 
 			function render() {
-				camera.position.x += ( mouseX - camera.position.x ) * .05;
-				camera.position.y += ( - mouseY - camera.position.y ) * .05;
+				camera.position.x += (mouseX - camera.position.x) * .05;
+				camera.position.y += (-mouseY - camera.position.y) * .05;
+				camera.position.z += -scrollZ * 20;
+				// reset scrollZ to prevent continuous zooming
+				scrollZ = 0;
 
-				camera.lookAt( scene.position );
+				camera.lookAt(scene.position);
 
-				renderer.render( scene, camera );
+				renderer.render(scene, camera);
 			}
-
 		</script>
-
 	</body>
 </html>
