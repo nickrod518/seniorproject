@@ -27,19 +27,21 @@
 
 	<body>
 		<div id="info">
-		<a href="http://threejs.org" target="_blank">three.js</a> - OBJMTLLoader test
+		    <select id="model">
+		      <option value="RandomFemale">RandomFemale</option>
+		      <option value="RandomMale">RandomMale</option>
+		    </select>
+		    <input id="load" type="button" value="load"/>
 		</div>
-
+    
 		<script src="js/three.min.js"></script>
-
 		<script src="js/MTLLoader.js"></script>
 		<script src="js/OBJMTLLoader.js"></script>
-
 		<script src="js/Detector.js"></script>
 		<script src="js/stats.min.js"></script>
 
 		<script>
-
+      
 			var container, stats;
 
 			var camera, scene, renderer;
@@ -49,22 +51,32 @@
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
 
-
 			init();
 			animate();
 
-
+			// load a new model
+			var loadButton = document.getElementById("load");
+			loadButton.onclick = function save() {
+				// get the div with the canvas element
+				var c = document.getElementById('canvas');
+				// remove the div with the canvas element
+				var remElement = (c.parentNode).removeChild(c);
+				// redraw
+			  	init();
+			}
+      
 			function init() {
-
 				container = document.createElement( 'div' );
+				container.setAttribute("id", "canvas")
+        
 				document.body.appendChild( container );
 
+        		// PerspectiveCamera(fov, aspect, near, far)
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
 				// distance of camera from model
 				camera.position.z = 500;
 
-				// scene
-
+				/* scene */
 				scene = new THREE.Scene();
 
 				var ambient = new THREE.AmbientLight( 0x101030 );
@@ -74,8 +86,9 @@
 				directionalLight.position.set( 0, 0, 1 ).normalize();
 				scene.add( directionalLight );
 
-				// model
-
+				/* model */
+				// get model name from html element
+				var model = document.getElementById("model").value;
 				var loader = new THREE.OBJMTLLoader();
 				loader.addEventListener( 'load', function ( event ) {
 
@@ -84,11 +97,9 @@
 					// height of camera
 					object.position.y = 0;
 					scene.add( object );
-
 				});
-				loader.load( 'RandomMale/RandomMale.obj', 'RandomMale/RandomMale.mtl' );
-
-				//
+				// use html element's value as the filename and location of the model's files
+				loader.load( model+'/'+model+'.obj', model+'/'+model+'.mtl' );
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setSize( window.innerWidth, window.innerHeight );
@@ -96,14 +107,10 @@
 
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
-				//
-
 				window.addEventListener( 'resize', onWindowResize, false );
-
 			}
-
+      
 			function onWindowResize() {
-
 				windowHalfX = window.innerWidth / 2;
 				windowHalfY = window.innerHeight / 2;
 
@@ -111,34 +118,26 @@
 				camera.updateProjectionMatrix();
 
 				renderer.setSize( window.innerWidth, window.innerHeight );
-
 			}
 
 			function onDocumentMouseMove( event ) {
 				// controls sensitivity of mouse movements
 				mouseX = ( event.clientX - windowHalfX ) * 2;
 				mouseY = ( event.clientY - windowHalfY ) * 2;
-
 			}
 
-			//
-
 			function animate() {
-
 				requestAnimationFrame( animate );
 				render();
-
 			}
 
 			function render() {
-
 				camera.position.x += ( mouseX - camera.position.x ) * .05;
 				camera.position.y += ( - mouseY - camera.position.y ) * .05;
 
 				camera.lookAt( scene.position );
 
 				renderer.render( scene, camera );
-
 			}
 
 		</script>
