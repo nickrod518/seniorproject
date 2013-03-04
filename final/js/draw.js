@@ -58,7 +58,7 @@ function init() {
 		scene.add(object);
 	});
 	// use html element's value as the filename and location of the model's files
-	loader.load(model + '/' + model + '.obj', model + '/' + model + '.mtl');
+	loader.load("models/" + model + '/' + model + '.obj', "models/" + model + '/' + model + '.mtl');
 
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
