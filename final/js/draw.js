@@ -2,11 +2,11 @@
 var freeLook = document.getElementById("freeLook");
 
 // get value of model dropdown
-var model = document.getElementById("model");
+var model = document.getElementById("model").value;
 // on change, update model
 document.getElementById("model").onchange = function() {
 	// update model value
-	model = document.getElementById("model");
+	model = document.getElementById("model").value;
 
 	// get the div with the canvas element
 	var c = document.getElementById("canvas");
@@ -49,7 +49,7 @@ function init() {
 	var ambient = new THREE.AmbientLight(0x101030);
 	scene.add(ambient);
 
-	var directionalLight = new THREE.DirectionalLight( 0xffeedd );
+	var directionalLight = new THREE.DirectionalLight(0xffeedd);
 	directionalLight.position.set(0, 0, 1).normalize();
 	scene.add(directionalLight);
 
@@ -61,7 +61,7 @@ function init() {
 		scene.add(object);
 	});
 	// use html element"s value as the filename and location of the model"s files
-	loader.load("models/" + model.value + "/" + model.value + ".obj", "models/" + model.value + "/" + model.value + ".mtl");
+	loader.load("models/" + model + "/" + model + ".obj", "models/" + model + "/" + model + ".mtl");
 
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
