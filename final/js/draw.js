@@ -1,12 +1,28 @@
+// get value of "Free Look" checkbox
 var freeLook = document.getElementById("freeLook");
+
+// get value of model dropdown
+var model = document.getElementById("model");
+// on change, update model
+document.getElementById("model").onchange = function() {
+	// update model value
+	model = document.getElementById("model");
+
+	// get the div with the canvas element
+	var c = document.getElementById("canvas");
+	// remove the div with the canvas element
+	var remElement = (c.parentNode).removeChild(c);
+	// redraw
+  	init();
+};
 
 var container, stats;
 
 var camera, scene, renderer;
 
 var startX = 0, startY = 0;
-var changeX = 0, changeY = 0;
-var mouseX = 0, mouseY = 0, scrollZ = 0;
+var dx = 0, dy = 0, dz = 0;
+var mouseX = 0, mouseY = 0;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -14,20 +30,9 @@ var windowHalfY = window.innerHeight / 2;
 init();
 animate();
 
-// load a new model
-var loadButton = document.getElementById("load");
-loadButton.onclick = function save() {
-	// get the div with the canvas element
-	var c = document.getElementById('canvas');
-	// remove the div with the canvas element
-	var remElement = (c.parentNode).removeChild(c);
-	// redraw
-  	init();
-}
-
 function init() {
 	// create a new div container for the element
-	container = document.createElement('div');
+	container = document.createElement("div");
 	// give the new div an id of "canvas"
 	container.setAttribute("id", "canvas");
 
@@ -49,16 +54,14 @@ function init() {
 	scene.add(directionalLight);
 
 	/* model */
-	// get model name from html element
-	var model = document.getElementById("model").value;
 	var loader = new THREE.OBJMTLLoader();
-	loader.addEventListener('load', function (event) {
+	loader.addEventListener("load", function (event) {
 		var object = event.content;
 		object.position.y = 0;
 		scene.add(object);
 	});
-	// use html element's value as the filename and location of the model's files
-	loader.load("models/" + model + '/' + model + '.obj', "models/" + model + '/' + model + '.mtl');
+	// use html element"s value as the filename and location of the model"s files
+	loader.load("models/" + model.value + "/" + model.value + ".obj", "models/" + model.value + "/" + model.value + ".mtl");
 
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
@@ -66,26 +69,26 @@ function init() {
 
 	/* event listeners for mouse */
 	// left mouse button press
-	document.addEventListener('mousedown', onDocumentMouseDown, false);
+	container.addEventListener("mousedown", onDocumentMouseDown, false);
 	// left mouse button release
-	document.addEventListener('mouseup', onDocumentMouseUp, false);
+	container.addEventListener("mouseup", onDocumentMouseUp, false);
 	// mouse movement
-	document.addEventListener('mousemove', onDocumentMouseMove, false);
-	window.addEventListener('resize', onWindowResize, false);
+	container.addEventListener("mousemove", onDocumentMouseMove, false);
+	window.addEventListener("resize", onWindowResize, false);
 	// mouse wheel (IE9, Chrome, Safari, Opera)
-	container.addEventListener('mousewheel', mouseWheelHandler, false);
+	container.addEventListener("mousewheel", mouseWheelHandler, false);
 	// mouse wheel (Firefox)
-	container.addEventListener('DOMMouseScroll', mouseWheelHandler, false);
+	container.addEventListener("DOMMouseScroll", mouseWheelHandler, false);
 
 	/* event listeners for touch devices */
 	// touch initiated
-	document.addEventListener("touchstart", touchHandler, true);
+	container.addEventListener("touchstart", touchHandler, true);
 	// touch moves
-    document.addEventListener("touchmove", touchHandler, true);
+    container.addEventListener("touchmove", touchHandler, true);
     // touch ends
-    document.addEventListener("touchend", touchHandler, true);
+    container.addEventListener("touchend", touchHandler, true);
     // ?
-    document.addEventListener("touchcancel", touchHandler, true);
+    container.addEventListener("touchcancel", touchHandler, true);
 }
 
 // touch event handler - remaps touch events to mouse events
@@ -118,8 +121,8 @@ function touchHandler(event) {
 
 // store change in x and y from from starting point to where mouse was released
 function onDocumentMouseUp(event) {
-	changeX += (event.clientX - startX) / 2;
-	changeY += (event.clientY - startY) / 2;
+	dx += (event.clientX - startX) / 2;
+	dy += (event.clientY - startY) / 2;
 }
 
 // use mouse position to rotate camera
@@ -140,7 +143,7 @@ function onWindowResize() {
 
 function mouseWheelHandler(event) {
 	var event = window.event || event; // old IE support
-	scrollZ = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
+	dz = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
 	return false;
 }
 
@@ -157,14 +160,14 @@ function render() {
 	}
 
 	// calculate new position when using click/drag method
-	camera.position.x -= (changeX + camera.position.x) * .05;
-	camera.position.y += (changeY - camera.position.y) * .05;
+	camera.position.x -= (dx + camera.position.x) * .05;
+	camera.position.y += (dy - camera.position.y) * .05;
 
 	// calculate new z position from mouse wheel method
-	camera.position.z += -scrollZ * 10;
+	camera.position.z += -dz * 10;
 
-	// reset scrollZ to prevent continuous zooming
-	scrollZ = 0;
+	// reset dz to prevent continuous zooming
+	dz = 0;
 
 	camera.lookAt(scene.position);
 
