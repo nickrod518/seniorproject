@@ -3,6 +3,7 @@ var freeLook = document.getElementById("freeLook");
 
 // get value of model dropdown
 var model = document.getElementById("model").value;
+
 // on change, update model
 document.getElementById("model").onchange = function() {
 	// update model value
@@ -19,6 +20,7 @@ document.getElementById("model").onchange = function() {
 var container, stats;
 
 var camera, scene, renderer;
+var ambientLight, directionalLight, spotLight;
 
 var startX = 0, startY = 0;
 var dx = 0, dy = 0, dz = 0;
@@ -38,20 +40,34 @@ function init() {
 
 	document.body.appendChild(container);
 
+  /* camera */
 	// PerspectiveCamera(fov, aspect, near, far)
 	camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2500);
 	// distance of camera from model
 	camera.position.z = 500;
 
-	/* scene */
+	/* scene and lighting */
 	scene = new THREE.Scene();
 
-	var ambient = new THREE.AmbientLight(0x101030);
-	scene.add(ambient);
+  // adds very minor ambient light to scene
+	ambientLight = new THREE.AmbientLight(0x101030);
+	scene.add(ambientLight);
 
-	var directionalLight = new THREE.DirectionalLight(0xffeedd);
-	directionalLight.position.set(0, 0, 1).normalize();
+  // adds blue directional light to left rear of head
+	directionalLight = new THREE.DirectionalLight(0x4169e1, 0.8);
+	directionalLight.position.set(-.5, 0.2, -1).normalize();
 	scene.add(directionalLight);
+
+  // light yellow spotlight attached to camera
+	spotLight = new THREE.SpotLight(0xeee8aa, 0.8);
+	spotLight.position.set(1, 1, 800);
+	spotLight.castShadow = true;
+	spotLight.shadowMapWidth = 1024;
+	spotLight.shadowMapHeight = 1024;
+	spotLight.shadowCameraNear = 1;
+	spotLight.shadowCameraFar = 2500;
+	spotLight.shadowCameraFov = 45;
+	scene.add(spotLight);
 
 	/* model */
 	var loader = new THREE.OBJMTLLoader();
@@ -84,11 +100,11 @@ function init() {
 	// touch initiated
 	container.addEventListener("touchstart", touchHandler, true);
 	// touch moves
-    container.addEventListener("touchmove", touchHandler, true);
-    // touch ends
-    container.addEventListener("touchend", touchHandler, true);
-    // ?
-    container.addEventListener("touchcancel", touchHandler, true);
+  container.addEventListener("touchmove", touchHandler, true);
+  // touch ends
+  container.addEventListener("touchend", touchHandler, true);
+  // ?
+  container.addEventListener("touchcancel", touchHandler, true);
 }
 
 // touch event handler - remaps touch events to mouse events
@@ -157,14 +173,21 @@ function render() {
 	if (freeLook.checked) {
 		camera.position.x -= (mouseX + camera.position.x) * .05;
 		camera.position.y -= (-mouseY + camera.position.y) * .05;
+
+		spotLight.position.x -= (dx + spotLight.position.x) * .05;
+		spotLight.position.y += (dy - spotLight.position.y) * .05;
 	}
 
 	// calculate new position when using click/drag method
 	camera.position.x -= (dx + camera.position.x) * .05;
 	camera.position.y += (dy - camera.position.y) * .05;
 
+	spotLight.position.x -= (dx + spotLight.position.x) * .05;
+	spotLight.position.y += (dy - spotLight.position.y) * .05;
+
 	// calculate new z position from mouse wheel method
 	camera.position.z += -dz * 10;
+	spotLight.position.z += -dz * 10;
 
 	// reset dz to prevent continuous zooming
 	dz = 0;
