@@ -1,26 +1,36 @@
+/*
+Nick Rodriguez
+7 March 2013
+adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html
+*/
+
+// popup with instructions for user
+window.onload = function instructionsPopup() {
+  alert("Use the dropdown box to select a model to load.\n\nMouse controls:\nDrag and release the mouse in any direction to rotate the model in that direction. Use the scroll wheel to zoom in and out on the model. Enable 'Free Look' to have the model rotate towards the cursor.\n\nTouch controls:\nFlick in any direction to rotate the model in that direction. With 'Free Look' checked, touch and hold to have the model rotate towards the touch.");
+}
+
 // get value of "Free Look" checkbox
 var freeLook = document.getElementById("freeLook");
 
 // get value of model dropdown
 var model = document.getElementById("model").value;
 
-// on change, update model
+// on change of dropdown, update model
 document.getElementById("model").onchange = function() {
 	// update model value
 	model = document.getElementById("model").value;
-
 	// get the div with the canvas element
 	var c = document.getElementById("canvas");
 	// remove the div with the canvas element
 	var remElement = (c.parentNode).removeChild(c);
 	// redraw
-  	init();
+  init();
 };
 
 var container, stats;
 
 var camera, scene, renderer;
-var ambientLight, directionalLight, spotLight;
+var object = new THREE.Mesh();
 
 var startX = 0, startY = 0;
 var dx = 0, dy = 0, dz = 0;
@@ -43,23 +53,23 @@ function init() {
   /* camera */
 	// PerspectiveCamera(fov, aspect, near, far)
 	camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2500);
-	// distance of camera from model
+	// camera starts at (0, 0, 0) so pull it back
 	camera.position.z = 500;
 
 	/* scene and lighting */
 	scene = new THREE.Scene();
 
-  // adds very minor ambient light to scene
-	ambientLight = new THREE.AmbientLight(0x101030);
+  // adds ambient light to scene
+	var ambientLight = new THREE.AmbientLight(0x101030);
 	scene.add(ambientLight);
 
   // adds blue directional light to left rear of head
-	directionalLight = new THREE.DirectionalLight(0x4169e1, 0.8);
+	var directionalLight = new THREE.DirectionalLight(0x4169e1, 0.8);
 	directionalLight.position.set(-.5, 0.2, -1).normalize();
 	scene.add(directionalLight);
 
-  // light yellow spotlight attached to camera
-	spotLight = new THREE.SpotLight(0xeee8aa, 0.8);
+  // adds light yellow spotlight attached to camera
+	var spotLight = new THREE.SpotLight(0xeee8aa, 0.8);
 	spotLight.position.set(1, 1, 800);
 	spotLight.castShadow = true;
 	spotLight.shadowMapWidth = 1024;
@@ -72,61 +82,54 @@ function init() {
 	/* model */
 	var loader = new THREE.OBJMTLLoader();
 	loader.addEventListener("load", function (event) {
-		var object = event.content;
+		object = event.content;
 		object.position.y = 0;
 		scene.add(object);
 	});
-	// use html element"s value as the filename and location of the model"s files
+	// use html element's value as the filename and location of the model's files
 	loader.load("models/" + model + "/" + model + ".obj", "models/" + model + "/" + model + ".mtl");
 
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	container.appendChild(renderer.domElement);
 
+  /* event listener for window */
+  window.addEventListener("resize", onWindowResize, false);
+  
 	/* event listeners for mouse */
-	// left mouse button press
 	container.addEventListener("mousedown", onDocumentMouseDown, false);
-	// left mouse button release
 	container.addEventListener("mouseup", onDocumentMouseUp, false);
-	// mouse movement
 	container.addEventListener("mousemove", onDocumentMouseMove, false);
-	window.addEventListener("resize", onWindowResize, false);
-	// mouse wheel (IE9, Chrome, Safari, Opera)
 	container.addEventListener("mousewheel", mouseWheelHandler, false);
-	// mouse wheel (Firefox)
 	container.addEventListener("DOMMouseScroll", mouseWheelHandler, false);
 
 	/* event listeners for touch devices */
-	// touch initiated
 	container.addEventListener("touchstart", touchHandler, true);
-	// touch moves
   container.addEventListener("touchmove", touchHandler, true);
-  // touch ends
   container.addEventListener("touchend", touchHandler, true);
-  // ?
   container.addEventListener("touchcancel", touchHandler, true);
 }
 
-// touch event handler - remaps touch events to mouse events
+// touch event handler - remaps touch events to simulated mouse events
 // taken from http://ross.posterous.com/2008/08/19/iphone-touch-events-in-javascript/
 function touchHandler(event) {
-    var touches = event.changedTouches,
-        first = touches[0],
-        type = "";
-    switch(event.type) {
-        case "touchstart": 	type="mousedown"; break;
-        case "touchmove":  	type="mousemove"; break;        
-        case "touchend":   	type="mouseup"; break;
-        default: return;
-    }
+  var touches = event.changedTouches,
+    first = touches[0],
+    type = "";
+  switch(event.type) {
+    case "touchstart": 	type="mousedown"; break;
+    case "touchmove":  	type="mousemove"; break;        
+    case "touchend":   	type="mouseup"; break;
+    default: return;
+  }
 
-    var simulatedEvent = document.createEvent("MouseEvent");
+  var simulatedEvent = document.createEvent("MouseEvent");
     simulatedEvent.initMouseEvent(type, true, true, window, 1, 
-		first.screenX, first.screenY, 
-		first.clientX, first.clientY, false, 
-		false, false, false, 0, null);
-	first.target.dispatchEvent(simulatedEvent);
-    event.preventDefault();
+    first.screenX, first.screenY, 
+    first.clientX, first.clientY, false, 
+    false, false, false, 0, null);
+  first.target.dispatchEvent(simulatedEvent);
+  event.preventDefault();
 }
 
 // store x and y value where mouse was pressed down
@@ -143,8 +146,8 @@ function onDocumentMouseUp(event) {
 
 // use mouse position to rotate camera
 function onDocumentMouseMove(event) {
-	mouseX = event.clientX - windowHalfX;
-	mouseY = event.clientY - windowHalfY;
+	mouseX = (event.clientX - windowHalfX) * 1;
+	mouseY = (event.clientY - windowHalfY) * 1;
 }		
 
 function onWindowResize() {
@@ -169,30 +172,30 @@ function animate() {
 }
 
 function render() {
-	// calculate new position when using free-mouse method
-	if (freeLook.checked) {
-		camera.position.x -= (mouseX + camera.position.x) * .05;
-		camera.position.y -= (-mouseY + camera.position.y) * .05;
+	// calculate new position when using free mouse method
+  if (freeLook.checked) {
+    targetX = mouseX * .01;
+    targetY = mouseY * .01;
 
-		spotLight.position.x -= (dx + spotLight.position.x) * .05;
-		spotLight.position.y += (dy - spotLight.position.y) * .05;
-	}
+    object.rotation.x += 0.05 * (targetY - object.rotation.x);
+    object.rotation.y += 0.05 * (targetX - object.rotation.y);
+  }
 
-	// calculate new position when using click/drag method
-	camera.position.x -= (dx + camera.position.x) * .05;
-	camera.position.y += (dy - camera.position.y) * .05;
+  // calculate new position when using click/drag method
+  else {
+    targetX = dx * .01;
+    targetY = dy * .01;
 
-	spotLight.position.x -= (dx + spotLight.position.x) * .05;
-	spotLight.position.y += (dy - spotLight.position.y) * .05;
+    object.rotation.x += 0.05 * (targetY - object.rotation.x);
+    object.rotation.y += 0.05 * (targetX - object.rotation.y);
+  }
 
 	// calculate new z position from mouse wheel method
 	camera.position.z += -dz * 10;
-	spotLight.position.z += -dz * 10;
 
 	// reset dz to prevent continuous zooming
 	dz = 0;
 
 	camera.lookAt(scene.position);
-
 	renderer.render(scene, camera);
 }

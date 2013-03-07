@@ -1,3 +1,9 @@
+<!--
+Nick Rodriguez
+7 March 2013
+adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -25,21 +31,24 @@
 	</head>
 
 	<body>
-		<!-- bar at top with model selection -->
+		<!-- bar at top with model dropdown and free look checkbox -->
 		<div id="info">
 		    <select id="model">
 		      <option value="RandomFemale">RandomFemale</option>
 		      <option value="RandomMale">RandomMale</option>
 		    </select>
 		    <br />
-		    Free Look<input type="checkbox" id="freeLook">
+		    Free Look<input type="checkbox" id="freeLook" checked>
 		</div>
     
-		<script src="js/three.min.js"></script>
+    <!-- three.js libraries taken from http://mrdoob.github.com/three.js/ -->
+		<script src="js/three.js"></script>
 		<script src="js/MTLLoader.js"></script>
 		<script src="js/OBJMTLLoader.js"></script>
 		<script src="js/Detector.js"></script>
 		<script src="js/stats.min.js"></script>
-		<script src="js/draw.js"></script>
+    
+    <!-- my script containing scene, model loading, camera, and lighting functions -->
+    <script src="js/draw.js"></script>
 	</body>
 </html>
