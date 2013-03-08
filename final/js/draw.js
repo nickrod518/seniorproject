@@ -6,7 +6,7 @@ adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_load
 
 // popup with instructions for user
 window.onload = function instructionsPopup() {
-  alert("Use the dropdown box to select a model to load.\n\nMouse controls:\nDrag and release the mouse in any direction to rotate the model in that direction. Use the scroll wheel to zoom in and out on the model. Enable 'Free Look' to have the model rotate towards the cursor.\n\nTouch controls:\nFlick in any direction to rotate the model in that direction. With 'Free Look' checked, touch and hold to have the model rotate towards the touch.");
+  alert('Use the dropdown box to select a model to load.\n\nMouse controls:\nDrag and release the mouse in any direction to rotate the model in that direction. Use the scroll wheel to zoom in and out on the model. Enable "Free Look" to have the model rotate towards the cursor.\n\nTouch controls:\nFlick in any direction to rotate the model in that direction. With "Free Look" checked, touch and hold to have the model rotate towards the touch.');
 }
 
 // get value of "Free Look" checkbox
@@ -60,17 +60,17 @@ function init() {
 	scene = new THREE.Scene();
 
   // adds ambient light to scene
-	var ambientLight = new THREE.AmbientLight(0x101030);
+	var ambientLight = new THREE.AmbientLight(0x404040);
 	scene.add(ambientLight);
 
   // adds blue directional light to left rear of head
-	var directionalLight = new THREE.DirectionalLight(0x4169e1, 0.8);
-	directionalLight.position.set(-.5, 0.2, -1).normalize();
+	var directionalLight = new THREE.DirectionalLight(0x4169e1, 0.4);
+	directionalLight.position.set(-0.2, 0, -0.2).normalize();
 	scene.add(directionalLight);
 
   // adds light yellow spotlight attached to camera
 	var spotLight = new THREE.SpotLight(0xeee8aa, 0.8);
-	spotLight.position.set(1, 1, 800);
+	spotLight.position.set(1, 100, 1000);
 	spotLight.castShadow = true;
 	spotLight.shadowMapWidth = 1024;
 	spotLight.shadowMapHeight = 1024;
@@ -166,6 +166,14 @@ function mouseWheelHandler(event) {
 	return false;
 }
 
+function zoomIn(event) {
+  dz += 3;
+}
+
+function zoomOut(event) {
+  dz -= 3;
+}
+
 function animate() {
 	requestAnimationFrame(animate);
 	render();
@@ -174,8 +182,8 @@ function animate() {
 function render() {
 	// calculate new position when using free mouse method
   if (freeLook.checked) {
-    targetX = mouseX * .01;
-    targetY = mouseY * .01;
+    targetX = mouseX * .005;
+    targetY = mouseY * .008;
 
     object.rotation.x += 0.05 * (targetY - object.rotation.x);
     object.rotation.y += 0.05 * (targetX - object.rotation.y);
