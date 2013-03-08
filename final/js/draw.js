@@ -161,7 +161,6 @@ function onWindowResize() {
 }
 
 function mouseWheelHandler(event) {
-	var event = window.event || event; // old IE support
 	dz = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
 	return false;
 }
