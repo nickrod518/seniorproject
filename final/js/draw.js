@@ -1,13 +1,11 @@
-/*
+﻿/*
 Nick Rodriguez
-7 March 2013
+20 March 2013
 adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html
 */
 
 // popup with instructions for user
-window.onload = function instructionsPopup() {
-  alert('Use the dropdown box to select a model to load.\n\nMouse controls:\nDrag and release the mouse in any direction to rotate the model in that direction. Use the scroll wheel to zoom in and out on the model. Enable "Free Look" to have the model rotate towards the cursor.\n\nTouch controls:\nFlick in any direction to rotate the model in that direction. With "Free Look" checked, touch and hold to have the model rotate towards the touch.');
-}
+window.onload = instructionsPopup();
 
 // get value of "Free Look" checkbox
 var freeLook = document.getElementById("freeLook");
@@ -108,6 +106,25 @@ function init() {
   container.addEventListener("touchmove", touchHandler, true);
   container.addEventListener("touchend", touchHandler, true);
   container.addEventListener("touchcancel", touchHandler, true);
+}
+
+// instruction popup called on load and button press
+function instructionsPopup() {
+  alert('Use the dropdown box to select a model to load.\n\nMouse controls:\nDrag and release the mouse in any direction to rotate the model in that direction. Use the scroll wheel to zoom in and out on the model. Enable "Free Look" to have the model rotate towards the cursor.\n\nTouch controls:\nFlick in any direction to rotate the model in that direction. With "Free Look" checked, touch and hold to have the model rotate towards the touch.');
+}
+
+// hide toolbar when button is pressed; show when pressed again
+function toggleToolbar() {
+  var toolbar = document.getElementById("toolbar");
+  var text = document.getElementById("toolbarButton");
+  if (toolbar.style.display == "block") {
+    toolbar.style.display = "none";
+    text.innerHTML = "Show Toolbar";
+  }
+  else {
+    toolbar.style.display = "block";
+    text.innerHTML = "Hide Toolbar";
+  }
 }
 
 // touch event handler - remaps touch events to simulated mouse events

@@ -1,6 +1,6 @@
 <!--
 Nick Rodriguez
-7 March 2013
+20 March 2013
 adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html
 -->
 
@@ -18,21 +18,33 @@ adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_load
 				margin: 0px;
 				overflow: hidden;
 			}
-			#info {
+      #toolbarButton {
+				color: #fff;
+				width: 100%;
+				text-align: center;
+        box-shadow: 0px 0px 7px 0px #808080;
+        visibility: visible;
+			}
+		  #toolbarButton:hover {
+        background-color: #212121;
+		  }
+			#toolbar {
 				color: #fff;
 				position: absolute;
-				top: 10px;
+				top: 18px;
 				width: 100%;
 				text-align: center;
 				z-index: 100;
-				display:block;
 			}
 		</style>
 	</head>
 
 	<body>
-		<!-- bar at top with model dropdown and free look checkbox -->
-		<div id="info">
+    <!-- click div to show or hide toolbar -->
+    <div id="toolbarButton" onclick="toggleToolbar()">Hide Toolbar</div>
+
+		<!-- bar at top with model dropdown and other tools -->
+		<div id="toolbar" style="display:block;">
 		  <select id="model">
 		    <option value="RandomFemale">RandomFemale</option>
 		    <option value="RandomMale">RandomMale</option>
@@ -44,6 +56,8 @@ adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_load
       Zoom
       <button onclick="zoomIn()">+</button>
       <button onclick="zoomOut()">-</button>
+      <br />
+      <button onclick="instructionsPopup()">Instructions</button>
 		</div>
     
     <!-- three.js libraries taken from http://mrdoob.github.com/three.js/ -->
