@@ -108,6 +108,23 @@ function init() {
   container.addEventListener("touchcancel", touchHandler, true);
 }
 
+// reset camera and model position on button press
+function reset() {
+  camera.position.x = 0;
+  camera.position.y = 0;
+  camera.position.z = 500;
+
+  object.rotation.x = 0;
+  object.rotation.y = 0;
+
+  dx = 0;
+  dy = 0;
+  dz = 0;
+
+  mouseX = 0;
+  mouseY = 0;
+}
+
 // WebGL detection or instruction popup called on load or button press
 function instructionsPopup() {
   renderer = Detector.webgl ?
@@ -218,8 +235,11 @@ function render() {
     object.rotation.y += 0.05 * (targetX - object.rotation.y);
   }
 
-	// calculate new z position from mouse wheel method
-	camera.position.z += -dz * 10;
+  // calculate new z position from mouse wheel method
+  if (camera.position.z > 150 && dz > 0)
+    camera.position.z += -dz * 25;
+  else if (camera.position.z < 700 && dz < 0)
+    camera.position.z += -dz * 25;
 
 	// reset dz to prevent continuous zooming
 	dz = 0;

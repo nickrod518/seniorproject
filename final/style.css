@@ -7,12 +7,15 @@ body {
 }
 
 #toolbarButton {
+  position: absolute;
+  background-color: #000;
+  opacity: .8;
 	color: #fff;
 	width: 100%;
 	text-align: center;
   box-shadow: 0px 0px 5px 0px #808080;
   visibility: visible;
-  z-index: 99;
+  z-index: 2;
 }
 
 #toolbarButton:hover {
@@ -21,18 +24,19 @@ body {
 
 #toolbar {
   background-color: #212121;
+  opacity: .8;
 	color: #fff;
 	position: absolute;
   left: 0;
   right: 0;
   margin-left: auto;
   margin-right: auto;
-	top: 17px;
+	top: 15px;
 	width: 200px;
   padding: 5px;
 	text-align: center;
-	z-index: 90;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   box-shadow: 0px 0px 5px 0px #808080;
+  z-index: 1;
 }
