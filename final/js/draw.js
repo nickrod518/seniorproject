@@ -1,7 +1,9 @@
 ﻿/*
 Nick Rodriguez
-20 March 2013
+22 March 2013
+
 adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html
+contains methods to handle toolbar buttons, camera rotation/zoom, model rotation, file loading, rendering, and animation
 */
 
 // popup with instructions for user
@@ -124,6 +126,11 @@ function reset() {
   mouseX = 0;
   mouseY = 0;
 }
+
+// reset the camera and model when free look is checked/unchecked
+freeLook.onchange = function () {
+  reset();
+};
 
 // WebGL detection or instruction popup called on load or button press
 function instructionsPopup() {
