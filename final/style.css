@@ -1,0 +1,38 @@
+body {
+	font-family: Monospace;
+	background-color: #000;
+	color: #fff;
+	margin: 0px;
+	overflow: hidden;
+}
+
+#toolbarButton {
+	color: #fff;
+	width: 100%;
+	text-align: center;
+  box-shadow: 0px 0px 5px 0px #808080;
+  visibility: visible;
+  z-index: 99;
+}
+
+#toolbarButton:hover {
+  background-color: #212121;
+}
+
+#toolbar {
+  background-color: #212121;
+	color: #fff;
+	position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+	top: 17px;
+	width: 200px;
+  padding: 5px;
+	text-align: center;
+	z-index: 90;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  box-shadow: 0px 0px 5px 0px #808080;
+}
