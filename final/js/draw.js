@@ -108,9 +108,13 @@ function init() {
   container.addEventListener("touchcancel", touchHandler, true);
 }
 
-// instruction popup called on load and button press
+// WebGL detection or instruction popup called on load or button press
 function instructionsPopup() {
-  alert('Use the dropdown box to select a model to load.\n\nMouse controls:\nDrag and release the mouse in any direction to rotate the model in that direction. Use the scroll wheel to zoom in and out on the model. Enable "Free Look" to have the model rotate towards the cursor.\n\nTouch controls:\nFlick in any direction to rotate the model in that direction. With "Free Look" checked, touch and hold to have the model rotate towards the touch.');
+  renderer = Detector.webgl ?
+  // if WebGL support is detected, show the following alert
+  alert('Use the dropdown box to select a model to load.\n\nMouse controls:\nDrag and release the mouse in any direction to rotate the model in that direction. Use the scroll wheel to zoom in and out on the model. Enable "Free Look" to have the model rotate towards the cursor.\n\nTouch controls:\nFlick in any direction to rotate the model in that direction. With "Free Look" checked, touch and hold to have the model rotate towards the touch.') :
+  // if WebGL support is not detected, show the following alert
+  alert("Your web browser does not support WebGL.");
 }
 
 // hide toolbar when button is pressed; show when pressed again
