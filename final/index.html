@@ -1,6 +1,6 @@
 <!--
 Nick Rodriguez
-22 March 2013
+27 March 2013
 
 adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html
 -->
@@ -31,6 +31,9 @@ adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_load
       Zoom
       <button onclick="zoomIn()">+</button>
       <button onclick="zoomOut()">-</button>
+      <br />
+      Light
+      <input type="range" min="0" max="30" value="8" onchange="updateLight(this.value);">
       <br />
       <button onclick="reset()">Reset</button>
       <button onclick="instructionsPopup()">Instructions</button>

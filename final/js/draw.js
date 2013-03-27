@@ -1,6 +1,6 @@
 ﻿/*
 Nick Rodriguez
-22 March 2013
+27 March 2013
 
 adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html
 contains methods to handle toolbar buttons, camera rotation/zoom, model rotation, file loading, rendering, and animation
@@ -30,6 +30,7 @@ document.getElementById("model").onchange = function() {
 var container, stats;
 
 var camera, scene, renderer;
+var spotLight = new THREE.SpotLight();
 var object = new THREE.Mesh();
 
 var startX = 0, startY = 0;
@@ -64,12 +65,12 @@ function init() {
 	scene.add(ambientLight);
 
   // adds blue directional light to left rear of head
-	var directionalLight = new THREE.DirectionalLight(0x4169e1, 0.4);
+	var directionalLight = new THREE.DirectionalLight(0x4169e1, 0.8);
 	directionalLight.position.set(-0.2, 0, -0.2).normalize();
 	scene.add(directionalLight);
 
   // adds light yellow spotlight attached to camera
-	var spotLight = new THREE.SpotLight(0xeee8aa, 0.8);
+	spotLight = new THREE.SpotLight(0xeee8aa, 0.8);
 	spotLight.position.set(1, 100, 1000);
 	spotLight.castShadow = true;
 	spotLight.shadowMapWidth = 1024;
@@ -125,6 +126,12 @@ function reset() {
 
   mouseX = 0;
   mouseY = 0;
+}
+
+// update intensity of spotlight
+function updateLight(brightness) {
+  // because the slider uses ints, we use a scale of 0-100 and then normalize here
+  spotLight.intensity = brightness*0.1;
 }
 
 // reset the camera and model when free look is checked/unchecked
