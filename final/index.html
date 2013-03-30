@@ -1,6 +1,6 @@
 <!--
 Nick Rodriguez
-27 March 2013
+30 March 2013
 
 adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html
 -->
@@ -26,14 +26,17 @@ adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_load
 		  </select>
 		  <br />
 		  Free Look
-      <input type="checkbox" id="freeLook" checked>
+      <input type="checkbox" id="freeLook" checked />
       <br />
       Zoom
       <button onclick="zoomIn()">+</button>
       <button onclick="zoomOut()">-</button>
       <br />
       Light
-      <input type="range" min="0" max="30" value="8" onchange="updateLight(this.value);">
+      <input id="brightness" type="range" min="0" max="30" value="8" onchange="updateLightBrightness(this.value);" />
+      <br />
+      Color
+      <input id="color" type="color" value="#eee8aa" onchange="updateLightColor(this.value);" />
       <br />
       <button onclick="reset()">Reset</button>
       <button onclick="instructionsPopup()">Instructions</button>

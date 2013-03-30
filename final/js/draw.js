@@ -1,6 +1,6 @@
 ﻿/*
 Nick Rodriguez
-27 March 2013
+30 March 2013
 
 adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html
 contains methods to handle toolbar buttons, camera rotation/zoom, model rotation, file loading, rendering, and animation
@@ -23,9 +23,11 @@ document.getElementById("model").onchange = function() {
 	var c = document.getElementById("canvas");
 	// remove the div with the canvas element
 	var remElement = (c.parentNode).removeChild(c);
-	// redraw
+  // redraw
   init();
 };
+
+var webglCapable = 0;
 
 var container, stats;
 
@@ -111,11 +113,13 @@ function init() {
   container.addEventListener("touchcancel", touchHandler, true);
 }
 
-// reset camera and model position on button press
+// reset camera, spotlight, and model position on button press
 function reset() {
   camera.position.x = 0;
   camera.position.y = 0;
   camera.position.z = 500;
+  
+  spotLight.intensity = 0.8;
 
   object.rotation.x = 0;
   object.rotation.y = 0;
@@ -126,12 +130,23 @@ function reset() {
 
   mouseX = 0;
   mouseY = 0;
+
+  document.getElementById("brightness").value = 8;
+  document.getElementById("color").value = "#eee8aa";
+  updateLightColor("#eee8aa");
 }
 
 // update intensity of spotlight
-function updateLight(brightness) {
+function updateLightBrightness(brightness) {
   // because the slider uses ints, we use a scale of 0-100 and then normalize here
   spotLight.intensity = brightness*0.1;
+}
+
+// update the color of the spotlight
+function updateLightColor(color) {
+  // convert the color value into a usable hex value
+  color = color.replace("#", "0x");
+  spotLight.color.setHex(color);
 }
 
 // reset the camera and model when free look is checked/unchecked
@@ -141,11 +156,20 @@ freeLook.onchange = function () {
 
 // WebGL detection or instruction popup called on load or button press
 function instructionsPopup() {
-  renderer = Detector.webgl ?
-  // if WebGL support is detected, show the following alert
-  alert('Use the dropdown box to select a model to load.\n\nMouse controls:\nDrag and release the mouse in any direction to rotate the model in that direction. Use the scroll wheel to zoom in and out on the model. Enable "Free Look" to have the model rotate towards the cursor.\n\nTouch controls:\nFlick in any direction to rotate the model in that direction. With "Free Look" checked, touch and hold to have the model rotate towards the touch.') :
-  // if WebGL support is not detected, show the following alert
-  alert("Your web browser does not support WebGL.");
+  // check if this is the first time we've checked webgl capabilities or if
+  if (!webglCapable) {
+    // check if webgl capable and if so, increment flag
+    if (Detector.webgl) {
+      alert('Use the dropdown box to select a model to load.\n\nMouse controls:\nDrag and release the mouse in any direction to rotate the model in that direction. Use the scroll wheel to zoom in and out on the model. Enable "Free Look" to have the model rotate towards the cursor.\n\nTouch controls:\nFlick in any direction to rotate the model in that direction. With "Free Look" checked, touch and hold to have the model rotate towards the touch.');
+      webglCapable++;
+    // web browser is not webgl capable
+    } else {
+      alert("Your web browser does not support WebGL.");
+    }
+  // web browser is webgl capable
+  } else {
+    alert('Use the dropdown box to select a model to load.\n\nMouse controls:\nDrag and release the mouse in any direction to rotate the model in that direction. Use the scroll wheel to zoom in and out on the model. Enable "Free Look" to have the model rotate towards the cursor.\n\nTouch controls:\nFlick in any direction to rotate the model in that direction. With "Free Look" checked, touch and hold to have the model rotate towards the touch.');
+  }
 }
 
 // hide toolbar when button is pressed; show when pressed again
