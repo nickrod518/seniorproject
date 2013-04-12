@@ -1,6 +1,6 @@
 ﻿/*
 Nick Rodriguez
-30 March 2013
+7 April 2013
 
 adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html
 contains methods to handle toolbar buttons, camera rotation/zoom, model rotation, file loading, rendering, and animation
@@ -35,9 +35,10 @@ var camera, scene, renderer;
 var spotLight = new THREE.SpotLight();
 var object = new THREE.Mesh();
 
-var startX = 0, startY = 0;
+var prevX = 0, prevY = 0;
 var dx = 0, dy = 0, dz = 0;
 var mouseX = 0, mouseY = 0;
+var mousedown = false;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -94,14 +95,15 @@ function init() {
 
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.domElement.setAttribute("id", "scene");
 	container.appendChild(renderer.domElement);
 
   /* event listener for window */
   window.addEventListener("resize", onWindowResize, false);
   
 	/* event listeners for mouse */
-	container.addEventListener("mousedown", onDocumentMouseDown, false);
-	container.addEventListener("mouseup", onDocumentMouseUp, false);
+	container.addEventListener("mousedown", mousedown=true, false);
+	container.addEventListener("mouseup", mousedown=false, false);
 	container.addEventListener("mousemove", onDocumentMouseMove, false);
 	container.addEventListener("mousewheel", mouseWheelHandler, false);
 	container.addEventListener("DOMMouseScroll", mouseWheelHandler, false);
@@ -208,22 +210,31 @@ function touchHandler(event) {
   event.preventDefault();
 }
 
-// store x and y value where mouse was pressed down
-	function onDocumentMouseDown(event) {
-	startX = event.clientX;
-	startY = event.clientY;
+document.onmousedown = function () {
+  mousedown = true;
+  //throw ("mouse is down");
 }
 
-// store change in x and y from from starting point to where mouse was released
-function onDocumentMouseUp(event) {
-	dx += (event.clientX - startX) / 2;
-	dy += (event.clientY - startY) / 2;
+document.onmouseup = function () {
+  mousedown = false;
+  //throw ("mouse is up");
 }
 
 // use mouse position to rotate camera
 function onDocumentMouseMove(event) {
-	mouseX = (event.clientX - windowHalfX) * 1;
-	mouseY = (event.clientY - windowHalfY) * 1;
+  // calculate new mouse position
+	mouseX = (event.clientX - windowHalfX);
+	mouseY = (event.clientY - windowHalfY);
+
+  // find difference of old mouse position - new mouse position
+	if (mousedown) {
+	  dx = prevX - mouseX;
+	  dy = prevY - mouseY;
+	}
+
+  // set old mouse position to current mouse position
+	prevX = mouseX;
+	prevY = mouseY;
 }		
 
 function onWindowResize() {
@@ -254,6 +265,8 @@ function animate() {
 	render();
 }
 
+
+
 function render() {
 	// calculate new position when using free mouse method
   if (freeLook.checked) {
@@ -266,11 +279,11 @@ function render() {
 
   // calculate new position when using click/drag method
   else {
-    targetX = dx * .01;
-    targetY = dy * .01;
+    object.rotation.x -= 0.05 * dy;
+    object.rotation.y -= 0.05 * dx;
 
-    object.rotation.x += 0.05 * (targetY - object.rotation.x);
-    object.rotation.y += 0.05 * (targetX - object.rotation.y);
+    dx *= .9;
+    dy *= .9;
   }
 
   // calculate new z position from mouse wheel method
