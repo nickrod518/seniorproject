@@ -39,6 +39,8 @@ var prevX = 0, prevY = 0;
 var dx = 0, dy = 0, dz = 0;
 var mouseX = 0, mouseY = 0;
 var mousedown = false;
+var zoomSensitivity = 3;
+var rotationSensitivity = 1;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -133,9 +135,21 @@ function reset() {
   mouseX = 0;
   mouseY = 0;
 
+  document.getElementById("zoomSensitivity").value = 3;
+  document.getElementById("rotationSensitivity").value = .01;
   document.getElementById("brightness").value = 8;
   document.getElementById("color").value = "#eee8aa";
   updateLightColor("#eee8aa");
+}
+
+// update sensitivity of rotation
+function updateRotationSensitivity(sensitivity) {
+  rotationSensitivity = sensitivity;
+}
+
+// update sensitivity of zoom
+function updateZoomSensitivity(sensitivity) {
+  zoomSensitivity = sensitivity;
 }
 
 // update intensity of spotlight
@@ -253,11 +267,11 @@ function mouseWheelHandler(event) {
 }
 
 function zoomIn(event) {
-  dz += 3;
+  dz += zoomSensitivity;
 }
 
 function zoomOut(event) {
-  dz -= 3;
+  dz -= zoomSensitivity;
 }
 
 function animate() {
@@ -273,24 +287,25 @@ function render() {
     targetX = mouseX * .005;
     targetY = mouseY * .008;
 
-    object.rotation.x += 0.05 * (targetY - object.rotation.x);
-    object.rotation.y += 0.05 * (targetX - object.rotation.y);
+    object.rotation.x += 0.05 * (targetY - object.rotation.x) * rotationSensitivity;
+    object.rotation.y += 0.05 * (targetX - object.rotation.y) * rotationSensitivity;
   }
 
   // calculate new position when using click/drag method
   else {
-    object.rotation.x -= 0.05 * dy;
-    object.rotation.y -= 0.05 * dx;
+    object.rotation.x -= 0.05 * dy * rotationSensitivity;
+    object.rotation.y -= 0.05 * dx * rotationSensitivity;
 
+    // decellerate rotation to a stop
     dx *= .9;
     dy *= .9;
   }
 
   // calculate new z position from mouse wheel method
   if (camera.position.z > 150 && dz > 0)
-    camera.position.z += -dz * 25;
+    camera.position.z += -zoomSensitivity * 25;
   else if (camera.position.z < 700 && dz < 0)
-    camera.position.z += -dz * 25;
+    camera.position.z += zoomSensitivity * 25;
 
 	// reset dz to prevent continuous zooming
 	dz = 0;
