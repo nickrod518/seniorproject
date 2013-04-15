@@ -136,7 +136,7 @@ function reset() {
   mouseY = 0;
 
   document.getElementById("zoomSensitivity").value = 3;
-  document.getElementById("rotationSensitivity").value = .01;
+  document.getElementById("rotationSensitivity").value = 1;
   document.getElementById("brightness").value = 8;
   document.getElementById("color").value = "#eee8aa";
   updateLightColor("#eee8aa");
