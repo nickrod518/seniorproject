@@ -20,6 +20,7 @@ adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_load
 
 		<!-- bar at top with model dropdown and other tools -->
 		<div id="toolbar" style="display:block;">
+      Model
 		  <select id="model">
         <option value="DrMec">Dr. Mec</option>
         <option value="YoungMan">Young Man</option>
@@ -27,24 +28,17 @@ adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_load
 		    <option value="RandomFemale">Random Female</option>
 		    <option value="RandomMale">Random Male</option>
 		  </select>
-		  <br />
 		  Free Look
       <input type="checkbox" id="freeLook" checked />
       <br />
       Zoom
-      <button onclick="zoomIn()">+</button>
-      <button onclick="zoomOut()">-</button>
+      <input id="zoom" type="range" min="250" max="1000" value="500" onchange="updateZoom(this.value);" />
       <br />
       Rotation Sensitivity
       <input id="rotationSensitivity" type="range" min=".1" max="2" step=".1" value="1" onchange="updateRotationSensitivity(this.value);" />
       <br />
-      Zoom Sensitivity
-      <input id="zoomSensitivity" type="range" min="1" max="5" value="3" onchange="updateZoomSensitivity(this.value);" />
-      <br />
       Light
       <input id="brightness" type="range" min="0" max="30" value="8" onchange="updateLightBrightness(this.value);" />
-      <br />
-      Color
       <input id="color" type="color" value="#eee8aa" onchange="updateLightColor(this.value);" />
       <br />
       <button onclick="reset()">Reset</button>

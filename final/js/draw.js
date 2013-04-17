@@ -92,6 +92,7 @@ function init() {
 		object.position.y = 0;
 		scene.add(object);
 	});
+
 	// use html element's value as the filename and location of the model's files
 	loader.load("models/" + model + "/" + model + ".obj", "models/" + model + "/" + model + ".mtl");
 
@@ -135,7 +136,7 @@ function reset() {
   mouseX = 0;
   mouseY = 0;
 
-  document.getElementById("zoomSensitivity").value = 3;
+  document.getElementById("zoom").value = 500;
   document.getElementById("rotationSensitivity").value = 1;
   document.getElementById("brightness").value = 8;
   document.getElementById("color").value = "#eee8aa";
@@ -147,9 +148,9 @@ function updateRotationSensitivity(sensitivity) {
   rotationSensitivity = sensitivity;
 }
 
-// update sensitivity of zoom
-function updateZoomSensitivity(sensitivity) {
-  zoomSensitivity = sensitivity;
+// update z position from zoom slider
+function updateZoom(zoom) {
+  camera.position.z = 1250-zoom;
 }
 
 // update intensity of spotlight
@@ -266,14 +267,6 @@ function mouseWheelHandler(event) {
 	return false;
 }
 
-function zoomIn(event) {
-  dz += zoomSensitivity;
-}
-
-function zoomOut(event) {
-  dz -= zoomSensitivity;
-}
-
 function animate() {
 	requestAnimationFrame(animate);
 	render();
@@ -302,10 +295,13 @@ function render() {
   }
 
   // calculate new z position from mouse wheel method
-  if (camera.position.z > 150 && dz > 0)
+  if (camera.position.z > 250 && dz > 0) {
     camera.position.z += -zoomSensitivity * 25;
-  else if (camera.position.z < 700 && dz < 0)
+    document.getElementById("zoom").value = 1250-camera.position.z;
+  } else if (camera.position.z < 1000 && dz < 0) {
     camera.position.z += zoomSensitivity * 25;
+    document.getElementById("zoom").value = 1250-camera.position.z;
+  }
 
 	// reset dz to prevent continuous zooming
 	dz = 0;
