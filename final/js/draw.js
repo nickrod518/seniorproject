@@ -366,11 +366,13 @@ function touchHandler(event) {
   event.preventDefault();
 }
 
+// triggered when mouse button is pressed
 document.onmousedown = function () {
   mousedown = true;
   //throw ("mouse is down");
 }
 
+// triggered when mouse button is released
 document.onmouseup = function () {
   mousedown = false;
   //throw ("mouse is up");
@@ -393,6 +395,7 @@ function onDocumentMouseMove(event) {
   prevY = mouseY;
 }
 
+// used to get capture scroll wheel movement for zooming
 function mouseWheelHandler(event) {
   dz = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
   return false;
