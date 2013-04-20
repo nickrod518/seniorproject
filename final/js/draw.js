@@ -1,10 +1,12 @@
 ﻿/*
 Nick Rodriguez
-18 April 2013
+20 April 2013
 
 adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html
 
-contains methods to handle toolbar buttons, camera rotation/zoom, model rotation, file loading, rendering, and animation
+Checks browser type and for WebGL compatibility. Creates a 3D scene using WebGL. 
+Initializes lights, camera, and loads model. Deals with all user mouse movements. 
+Listens to toolbar function changes and reacts appropriately. 
 */
 
 
@@ -57,9 +59,7 @@ var windowHalfY = window.innerHeight / 2;
 /*
 =======================================================================================================================
 ***********************************************************************************************************************
-
 -------------------------------------------- END ----------------------------------------------------------------------
-
 ***********************************************************************************************************************
 =======================================================================================================================
 */
@@ -92,9 +92,7 @@ function mobileCheck() {
 /*
 =======================================================================================================================
 ***********************************************************************************************************************
-
 -------------------------------------------- END ----------------------------------------------------------------------
-
 ***********************************************************************************************************************
 =======================================================================================================================
 */
@@ -130,13 +128,12 @@ function init() {
 
   document.body.appendChild(container);
 
-  /* camera */
   // PerspectiveCamera(fov, aspect, near, far)
   camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2500);
   // camera starts at (0, 0, 0) so pull it back
   camera.position.z = 500;
 
-  /* scene and lighting */
+  // creates scene to use for lighting
   scene = new THREE.Scene();
 
   // adds ambient light to scene
@@ -159,7 +156,7 @@ function init() {
   spotLight.shadowCameraFov = 45;
   scene.add(spotLight);
 
-  /* model */
+  // model loader
   var loader = new THREE.OBJMTLLoader();
   loader.addEventListener("load", function (event) {
     object = event.content;
@@ -175,17 +172,17 @@ function init() {
   renderer.domElement.setAttribute("id", "scene");
   container.appendChild(renderer.domElement);
 
-  /* event listener for window */
+  // event listener for window
   window.addEventListener("resize", onWindowResize, false);
 
-  /* event listeners for mouse */
+  // event listeners for mouse
   container.addEventListener("mousedown", mousedown = true, false);
   container.addEventListener("mouseup", mousedown = false, false);
   container.addEventListener("mousemove", onDocumentMouseMove, false);
   container.addEventListener("mousewheel", mouseWheelHandler, false);
   container.addEventListener("DOMMouseScroll", mouseWheelHandler, false);
 
-  /* event listeners for touch devices */
+  // event listeners for touch devices
   container.addEventListener("touchstart", touchHandler, true);
   container.addEventListener("touchmove", touchHandler, true);
   container.addEventListener("touchend", touchHandler, true);
@@ -195,9 +192,7 @@ function init() {
 /*
 =======================================================================================================================
 ***********************************************************************************************************************
-
 -------------------------------------------- END ----------------------------------------------------------------------
-
 ***********************************************************************************************************************
 =======================================================================================================================
 */
@@ -304,7 +299,7 @@ function instructionsPopup() {
   if (!webglCapable) {
     // check if webgl capable and if so, increment flag
     if (Detector.webgl) {
-      alert('Use the dropdown box to select a model to load.\n\nMouse controls:\nDrag and release the mouse in any direction to rotate the model in that direction. Use the scroll wheel to zoom in and out on the model. Enable "Free Look" to have the model rotate towards the cursor.\n\nTouch controls:\nFlick in any direction to rotate the model in that direction. With "Free Look" checked, touch and hold to have the model rotate towards the touch.');
+      alert('Controls:\nThe model will follow your mouse when "Free Look" is checked. When unchecked, drag and release the mouse in any direction (flick) to rotate the model in that direction. Use the scroll wheel or "Zoom" slider to zoom in and out on the model.\n\nUse the dropdown box to select a model to load.\n\nUse the "Sensitivity" slider to adjust mouse or touch rotation sensitivity.\n\nUse the "Light" slider to adjust light intensity (brightness). Use the color picker to change the spotlight color.\n\n"Reset" will reset all toolbar settings.\n\n"Instructions" will bring this prompt back up.\n\nPress the "Hide Toolbar" button at the top to hide the toolbar. Press again to bring back.');
       webglCapable++;
       // web browser is not webgl capable
     } else {
@@ -312,16 +307,14 @@ function instructionsPopup() {
     }
     // web browser is webgl capable
   } else {
-    alert('Use the dropdown box to select a model to load.\n\nMouse controls:\nDrag and release the mouse in any direction to rotate the model in that direction. Use the scroll wheel to zoom in and out on the model. Enable "Free Look" to have the model rotate towards the cursor.\n\nTouch controls:\nFlick in any direction to rotate the model in that direction. With "Free Look" checked, touch and hold to have the model rotate towards the touch.');
+    alert('Controls:\nThe model will follow your mouse when "Free Look" is checked. When unchecked, drag and release the mouse in any direction (flick) to rotate the model in that direction. Use the scroll wheel or "Zoom" slider to zoom in and out on the model.\n\nUse the dropdown box to select a model to load.\n\nUse the "Sensitivity" slider to adjust mouse or touch rotation sensitivity.\n\nUse the "Light" slider to adjust light intensity (brightness). Use the color picker to change the spotlight color.\n\n"Reset" will reset all toolbar settings.\n\n"Instructions" will bring this prompt back up.\n\nPress the "Hide Toolbar" button at the top to hide the toolbar. Press again to bring back.');
   }
 }
 
 /*
 =======================================================================================================================
 ***********************************************************************************************************************
-
 -------------------------------------------- END ----------------------------------------------------------------------
-
 ***********************************************************************************************************************
 =======================================================================================================================
 */
@@ -415,9 +408,7 @@ function onWindowResize() {
 /*
 =======================================================================================================================
 ***********************************************************************************************************************
-
 -------------------------------------------- END ----------------------------------------------------------------------
-
 ***********************************************************************************************************************
 =======================================================================================================================
 */
@@ -490,9 +481,7 @@ function render() {
 /*
 =======================================================================================================================
 ***********************************************************************************************************************
-
 -------------------------------------------- END ----------------------------------------------------------------------
-
 ***********************************************************************************************************************
 =======================================================================================================================.
 */

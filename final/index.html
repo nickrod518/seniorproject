@@ -9,6 +9,7 @@ contains main web page which displays scene and toolbar
 
 <!DOCTYPE html>
 <html lang="en">
+
 	<head>
 		<title>A-Head of WebGL</title>
     <meta name="author" content="Nick Rodriguez" />
@@ -18,11 +19,13 @@ contains main web page which displays scene and toolbar
 	</head>
 
 	<body>
+
     <!-- bar across top used to hide toolbar -->
     <div id="toolbarButton" onclick="toggleToolbar()">Hide Toolbar</div>
 
 		<!-- toolbar at top with view tools -->
 		<div id="toolbar" style="display:block;">
+
       <!-- table is used for alignment of toolbar items -->
       <table> 
         <tr>
@@ -64,6 +67,7 @@ contains main web page which displays scene and toolbar
           </td>
         </tr>
       </table>
+
 		</div>
     
     <!-- three.js libraries taken from http://mrdoob.github.com/three.js/ -->
@@ -73,8 +77,9 @@ contains main web page which displays scene and toolbar
 		<script src="js/Detector.js"></script>
 		<script src="js/stats.min.js"></script>
     
-    <!-- my script containing scene, model loading, camera, and lighting functions -->
+    <!-- my script, containing scene, model loading, camera, lighting functions, etc. -->
     <script src="js/draw.js"></script>
+
 	</body>
 
 </html>
