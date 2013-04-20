@@ -1,6 +1,6 @@
 /*
 Nick Rodriguez
-22 March 2013
+20 April 2013
 
 stylesheet
 */
@@ -13,9 +13,10 @@ body {
 	overflow: hidden;
 }
 
+/* bar across top used for hiding toolbar */
 #toolbarButton {
   position: absolute;
-  background-color: #000;
+  background-color: #212121;
   opacity: .8;
 	color: #fff;
   padding-top: 3px;
@@ -27,10 +28,12 @@ body {
   z-index: 2;
 }
 
+/* effect when hovering over toolbarButton */
 #toolbarButton:hover {
-  background-color: #212121;
+  background-color: #000;
 }
 
+/* hideable container for toolbar items */
 #toolbar {
   background-color: #212121;
   opacity: .8;
@@ -41,10 +44,8 @@ body {
   margin-left: auto;
   margin-right: auto;
 	top: 22px;
-	width: 400px;
-  float: left;
+	width: 300px;
   padding: 5px;
-	text-align: center;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   box-shadow: 0px 0px 5px 0px #808080;
