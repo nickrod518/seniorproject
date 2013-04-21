@@ -51,3 +51,7 @@ body {
   box-shadow: 0px 0px 5px 0px #808080;
   z-index: 1;
 }
+
+.rightAlign {
+  text-align: right;
+}
