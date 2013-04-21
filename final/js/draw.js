@@ -222,7 +222,8 @@ document.getElementById("model").onchange = function () {
   var c = document.getElementById("canvas");
   // remove the div with the canvas element
   var remElement = (c.parentNode).removeChild(c);
-  // redraw
+  // reset and redraw
+  reset();
   init();
 };
 
