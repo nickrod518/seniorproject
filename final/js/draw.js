@@ -300,7 +300,7 @@ function instructionsPopup() {
   if (!webglCapable) {
     // check if webgl capable and if so, increment flag
     if (Detector.webgl) {
-      alert('Controls:\nThe model will follow your mouse when "Free Look" is checked. When unchecked, drag and release the mouse in any direction (flick) to rotate the model in that direction. Use the scroll wheel or "Zoom" slider to zoom in and out on the model.\n\nUse the dropdown box to select a model to load.\n\nUse the "Sensitivity" slider to adjust mouse or touch rotation sensitivity.\n\nUse the "Light" slider to adjust light intensity (brightness). Use the color picker to change the spotlight color.\n\n"Reset" will reset all toolbar settings.\n\n"Instructions" will bring this prompt back up.\n\nPress the "Hide Toolbar" button at the top to hide the toolbar. Press again to bring back.');
+      alert('Disclaimer: This app was developed for use with Google Chrome.\n\nControls: The model will follow your mouse when "Free Look" is checked. When unchecked, drag and release the mouse in any direction (flick) to rotate the model in that direction. Use the scroll wheel or "Zoom" slider to zoom in and out on the model.\n\nUse the dropdown box to select a model to load.\n\nUse the "Sensitivity" slider to adjust mouse or touch rotation sensitivity.\n\nUse the "Light" slider to adjust light intensity (brightness). Use the color picker to change the spotlight color.\n\n"Reset" will reset all toolbar settings.\n\n"Instructions" will bring this prompt back up.\n\nPress the "Hide Toolbar" button at the top to hide the toolbar. Press again to bring back.');
       webglCapable++;
       // web browser is not webgl capable
     } else {
@@ -308,7 +308,7 @@ function instructionsPopup() {
     }
     // web browser is webgl capable
   } else {
-    alert('Controls:\nThe model will follow your mouse when "Free Look" is checked. When unchecked, drag and release the mouse in any direction (flick) to rotate the model in that direction. Use the scroll wheel or "Zoom" slider to zoom in and out on the model.\n\nUse the dropdown box to select a model to load.\n\nUse the "Sensitivity" slider to adjust mouse or touch rotation sensitivity.\n\nUse the "Light" slider to adjust light intensity (brightness). Use the color picker to change the spotlight color.\n\n"Reset" will reset all toolbar settings.\n\n"Instructions" will bring this prompt back up.\n\nPress the "Hide Toolbar" button at the top to hide the toolbar. Press again to bring back.');
+    alert('Disclaimer: This app was developed for use with Google Chrome.\n\nControls: The model will follow your mouse when "Free Look" is checked. When unchecked, drag and release the mouse in any direction (flick) to rotate the model in that direction. Use the scroll wheel or "Zoom" slider to zoom in and out on the model.\n\nUse the dropdown box to select a model to load.\n\nUse the "Sensitivity" slider to adjust mouse or touch rotation sensitivity.\n\nUse the "Light" slider to adjust light intensity (brightness). Use the color picker to change the spotlight color.\n\n"Reset" will reset all toolbar settings.\n\n"Instructions" will bring this prompt back up.\n\nPress the "Hide Toolbar" button at the top to hide the toolbar. Press again to bring back.');
   }
 }
 
