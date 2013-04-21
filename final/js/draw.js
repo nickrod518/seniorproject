@@ -289,6 +289,11 @@ function updateLightColor(color) {
   spotLight.color.setHex(color);
 }
 
+// update background color
+function updateBackgroundColor(color) {
+  document.body.style.background = color;
+}
+
 // reset the camera and model when free look is checked/unchecked
 freeLook.onchange = function () {
   reset();

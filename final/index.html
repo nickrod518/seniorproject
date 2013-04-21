@@ -45,6 +45,10 @@ contains main web page which displays scene and toolbar
           <td><input type="checkbox" id="freeLook" checked /></td>
         </tr>
         <tr>
+          <td class="rightAlign">Background</td>
+          <td><input id="background" type="color" value="#000000" onchange="updateBackgroundColor(this.value);" /></td>
+        </tr>
+        <tr>
           <td class="rightAlign">Zoom</td>
           <td><input id="zoom" type="range" min="250" max="1000" value="500" onchange="updateZoom(this.value);" /></td>
         </tr>
