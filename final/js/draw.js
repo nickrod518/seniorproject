@@ -1,6 +1,6 @@
 ﻿/*
 Nick Rodriguez
-20 April 2013
+22 April 2013
 
 adapted from: https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html
 
@@ -262,6 +262,7 @@ function reset() {
   document.getElementById("zoom").value = 500;
   document.getElementById("rotationSensitivity").value = 1;
   document.getElementById("brightness").value = 8;
+  document.getElementById("background").value = "#000000";
   document.getElementById("color").value = "#eee8aa";
   updateLightColor("#eee8aa");
 }
