@@ -259,10 +259,12 @@ function reset() {
   mouseX = 0;
   mouseY = 0;
 
+  // reset toolbar
   document.getElementById("zoom").value = 500;
   document.getElementById("rotationSensitivity").value = 1;
   document.getElementById("brightness").value = 8;
   document.getElementById("background").value = "#000000";
+  document.body.style.background = "#000000";
   document.getElementById("color").value = "#eee8aa";
   updateLightColor("#eee8aa");
 }
